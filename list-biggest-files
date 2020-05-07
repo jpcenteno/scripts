@@ -1,0 +1,15 @@
+#! /bin/sh
+set -eu
+
+
+# list-biggest-files
+#
+# Print a list of the biggest files/directories in the specified directory.
+#
+# usage:
+#   disk-usage-report       # defaults to PWD
+#   disk-usage-report FILE
+
+
+dir="${1:-.}"
+du -hc -d 1 "${dir}" 2>/dev/null | sort -hr
