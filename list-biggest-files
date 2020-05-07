@@ -12,4 +12,4 @@ set -eu
 
 
 dir="${1:-.}"
-du -hc -d 1 "${dir}" 2>/dev/null | sort -hr
+du -hc -d 1 "${dir}"/* 2>/dev/null | sort -hr
