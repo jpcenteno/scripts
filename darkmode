@@ -1,0 +1,44 @@
+#! /bin/sh
+set -eu
+
+help() {
+    cat <<-EOF
+
+darkmode - Control Mac Os appearance mode.
+
+usage:
+  darkmode <subcommand>
+
+subcommands:
+  on          Set the appearance to dark mode.
+  off         Set the appearance to light mode.
+  toggle      Toggle between Dark and light mode.
+  help, -h    Show this message.
+EOF
+}
+
+darkmode_on() {
+    osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to 1'
+}
+
+darkmode_off() {
+    osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to 0'
+}
+
+darkmode_toggle() {
+    osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode'
+}
+
+if ! command -v "osascript" 1>/dev/null; then
+    echo "Program 'osascript' not found. Are you even on Mac Os?"
+    exit 1
+fi
+
+option="${1:-}"
+case "${option}" in
+    "" | "-h" | "help") help;;
+    "on") darkmode_on;;
+    "off") darkmode_off;;
+    "toggle") darkmode_toggle;;
+    *) echo 'Invalid subcommand.'; help; exit 1;;
+esac
