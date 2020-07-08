@@ -1,0 +1,47 @@
+#! /bin/sh
+
+# Copy a kaomoji to clipboard.
+
+if [ "${1:-}" = "help" ] || [ "${1:-}" = "-h" ]; then
+    echo ""
+    echo "kaomoji - Select a Kaomoji and copy it to clipboard."
+    echo ""
+    echo "usage:"
+    echo "  kaomoji"
+    exit 1
+fi
+
+cat << 'EOF' | fzy | sed -E 's#^[[:alpha:][:space:]]+##' | tr -d '\n' | pbcopy
+cat                =^._.^= ∫
+cat                (=^･ｪ･^=))ﾉ彡☆
+cat                (＾º◡º＾❁)
+cat                (=^ ◡ ^=)
+cat                /ᐠ｡ꞈ｡ᐟ\
+cat                /ᐠ｡▿｡ᐟ\*ᵖᵘʳʳ*
+cat                /ᐠ ._. ᐟ\ﾉ
+cat                /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+cat                ฅ/ᐠ｡ᆽ｡ᐟ \
+cat                (ﾐㅇᆽㅇﾐ)
+cat                [^._.^]ﾉ彡
+cat                (=✖ ᆺ ✖=)
+cat                ៱˳_˳៱ ̳ ∫
+cat                *:･ﾟ✧(=✪ ᆺ ✪=)*:･ﾟ✧
+cat                (⌯・▾・⌯) 
+excited            ヽ(＾Д＾)ﾉ
+hurrah             ＼（＾ ＾）／ バンザーイ
+depressed          (´。＿。｀)
+depressed          _( ┐乙(､ﾝ､)＿ ＿/ᴜɢʜ…
+sad                (╯︵╰,)
+shrug              ¯\_(ツ)_/¯
+confused           ( ・◇・)？
+skeptical          ב_ב
+disaproving        (𓌻‸𓌻) ᴜɢʜ.
+old man            (๏็ટૄ◟๏็ )
+table flip         (╯°□°）╯︵ ┻━┻
+smoking            (▔▀ ‿ ▔▀ )ლ ▂▂⌇
+pig                (´・(oo)・｀)
+bear               ʕ　·ᴥʔ
+bat                (㇏(•̀ ᢍ •́ )ノ)
+creepy dog         (⁰ ꓃ ⁰し)
+dog with hearth    ♡(ᐢ ᴥ ᐢし)
+EOF
