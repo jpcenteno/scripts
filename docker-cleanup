@@ -1,0 +1,54 @@
+#! /bin/sh
+set -eu
+
+# ------------------------------------------------------------------------------
+# docker-cleanup.sh
+# Remove old docker images, containers and firewall rules.
+# ------------------------------------------------------------------------------
+
+# Specify the TTL for containers and images. This sets the `until` filter on
+# the prune commands issued to Docker.
+#
+# From the Docker docs [1]:
+# The until filter can be Unix timestamps, date formatted timestamps, or Go
+# duration strings (e.g. 10m, 1h30m) computed relative to the daemon machine’s
+# time. Supported formats for date formatted time stamps include RFC3339Nano,
+# RFC3339, 2006-01-02T15:04:05, 2006-01-02T15:04:05.999999999,
+# 2006-01-02Z07:00, and 2006-01-02. The local timezone on the daemon will be
+# used if you do not provide either a Z or a +-00:00 timezone offset at the end
+# of the timestamp. When providing Unix timestamps enter seconds[.nanoseconds],
+# where seconds is the number of seconds that have elapsed since January 1,
+# 1970 (midnight UTC/GMT), not counting leap seconds (aka Unix epoch or Unix
+# time), and the optional .nanoseconds field is a fraction of a second no more
+# than nine digits long.
+#
+# From the Go docs [2]:
+# ParseDuration parses a duration string. A duration string is a possibly
+# signed sequence of decimal numbers, each with optional fraction and a unit
+# suffix, such as "300ms", "-1.5h" or "2h45m". Valid time units are "ns", "us"
+# (or "µs"), "ms", "s", "m", "h".
+#
+# [1]: https://docs.docker.com/engine/reference/commandline/container_prune/#filtering
+# [2]: https://golang.org/pkg/time/#ParseDuration
+DOCKER_PRUNE_TTL_DEFAULT="$(( 5 * 24 ))h"
+DOCKER_PRUNE_TTL="${DOCKER_PRUNE_TTL:-${DOCKER_PRUNE_TTL_DEFAULT}}"
+
+# This script makes use of the Docker _prune_ commands. More info about them
+# can be found on the official docs [3].
+#
+# [3]: https://docs.docker.com/config/pruning/
+
+# Disk usage before
+docker system df
+
+# Remove containers stopped for longer than $DOCKER_PRUNE_TTL.
+docker container prune --force --filter "until=${DOCKER_PRUNE_TTL}"
+
+# Remove images not used by a container and older than $DOCKER_PRUNE_TTL.
+docker image prune --force --all --filter "until=${DOCKER_PRUNE_TTL}"
+
+# Remove network rules not used by any container.
+docker network prune --force
+
+# Disk usage after
+docker system df
