@@ -1,0 +1,17 @@
+#! /bin/sh
+
+## ls-repos
+## ========
+##
+## List git repositories.
+##
+## Usage
+## -----
+##
+## ls-repos [path]
+##
+## path -- Path to look for git repos from. Defaults to `$PWD`.
+
+BASEDIR="${1:-${PWD}}"
+
+fd --type d --hidden '\.git$' "${BASEDIR}" | sed 's#/\.git$##g'
